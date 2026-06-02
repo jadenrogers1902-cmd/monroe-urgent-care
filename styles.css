@@ -1469,44 +1469,49 @@ address {
   h3 { font-size: 1.05rem; line-height: 1.2; }
   p, li { font-size: 1rem; line-height: 1.55; }
 
-  /* ── Header — 3-zone grid: logo | phone | menu ── */
+  /* ── Header — flex row: logo left, actions right ── */
   .header-inner {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 8px;
     min-height: 60px;
   }
 
-  .header-left { gap: 0; }               /* logo only in left cell */
-  .brand img   { width: 88px; }
+  .header-left  { gap: 0; flex-shrink: 0; }
+  .brand img    { width: 88px; }
 
-  /* Phone number sits in the middle cell */
-  .header-phone {
-    display: flex;
-    justify-content: center;
-    font-size: clamp(0.9rem, 3.8vw, 1.05rem);
-    font-weight: 800;
+  /* Phone number hidden — "Call" in the sticky bar covers it */
+  .header-phone { display: none; }
+
+  /* Right side: compact Book Online + hamburger */
+  .header-right { gap: 8px; flex-shrink: 0; }
+
+  /* Show Book Online but compact */
+  .header-right .btn-primary {
+    display: inline-flex;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    min-height: 40px;
     white-space: nowrap;
-    color: var(--clr-ink);
-    text-decoration: none;
   }
 
-  /* Right cell: menu toggle only — hide Patient Info + Book Online */
-  .header-right               { gap: 0; justify-content: flex-end; }
-  .header-right .btn-gray,
-  .header-right .btn-primary  { display: none; }
+  /* Still hide Patient Info — it's in the dropdown */
+  .header-right .btn-gray { display: none; }
 
-  /* Dropdown opens full-width on mobile */
+  /* ── Dropdown: fixed to viewport so it always fits the screen ── */
   .header-dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    margin: 0 12px;
+    position: fixed;
+    top: 60px;          /* sits just below the mobile header */
+    left: 12px;
+    right: 12px;
     width: auto;
+    margin: 0;
     border-radius: 14px;
     padding: 8px;
+    z-index: 200;       /* above everything */
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
   }
 
   .header-dropdown a {
@@ -1632,15 +1637,15 @@ address {
   .mobile-sticky-cta a  { font-size: 0.88rem; font-weight: 800; min-height: 64px; }
 }
 
-/* ── Very small phones — max 430px ──────────────────────────────────── */
-@media (max-width: 430px) {
-  .brand img      { width: 76px; }
-  .header-phone   { font-size: clamp(0.82rem, 3.5vw, 0.96rem); }
-  .header-inner   { gap: 6px; }
-  .menu-toggle    { width: 42px; height: 42px; }
+/* ── Very small phones — max 390px ──────────────────────────────────── */
+@media (max-width: 390px) {
+  .brand img                   { width: 74px; }
+  .header-inner                { gap: 6px; }
+  .menu-toggle                 { width: 40px; height: 40px; }
+  .header-right .btn-primary   { padding: 7px 10px; font-size: 0.78rem; }
 
-  .hero-layout    { padding: 2rem 0 1.5rem; gap: 1.5rem; }
-  .hero-copy h1   { font-size: clamp(1.65rem, 8vw, 2rem); }
+  .hero-layout    { padding: 1.75rem 0 1.5rem; gap: 1.25rem; }
+  .hero-copy h1   { font-size: clamp(1.55rem, 7.5vw, 1.85rem); }
 }
 
 /* ── Small tablet — 560px to 767px ──────────────────────────────────── */
