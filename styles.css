@@ -570,7 +570,7 @@ button, input, textarea, select, label {
   display: grid;
   gap: 36px;
   padding: 56px 0 64px;
-  width: 100%;
+  /* no width: 100% — let .container handle margins so text never clips */
 }
 
 .hero-copy {
@@ -1456,78 +1456,117 @@ address {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
-   RESPONSIVE SYSTEM
-   Breakpoints: 430 · 560 · 768 · 1040
+   RESPONSIVE SYSTEM  —  360 · 430 · 560 · 768 · 1040
+   Root fix: hero-layout no longer has width:100%, so .container margins
+   apply correctly and no hero text clips on the left.
    ══════════════════════════════════════════════════════════════════════ */
 
-/* ── All mobile / tablet — max 767px ────────────────────────────────── */
+/* ── Mobile — max 767px ─────────────────────────────────────────────── */
 @media (max-width: 767px) {
 
+  /* ── Global overflow guard ── */
+  .site-header,
+  .trust-marquee,
+  .hero,
+  main,
+  section,
+  footer {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   /* ── Typography ── */
-  h1 { font-size: clamp(1.7rem, 8vw, 2.2rem); line-height: 1.06; letter-spacing: -0.03em; }
-  h2 { font-size: clamp(1.3rem, 6vw, 1.7rem); line-height: 1.1; }
-  h3 { font-size: 1.05rem; line-height: 1.2; }
+  h1  { font-size: clamp(1.65rem, 7.5vw, 2.1rem); line-height: 1.07; letter-spacing: -0.03em; }
+  h2  { font-size: clamp(1.25rem, 5.5vw, 1.65rem); line-height: 1.1; }
+  h3  { font-size: 1.05rem; line-height: 1.2; }
   p, li { font-size: 1rem; line-height: 1.55; }
 
-  /* ── Header — flex row: logo left, actions right ── */
+  /* ─────────────────────────────────────────────────────────────────────
+     HEADER  —  3-column grid:  [Logo]  [Phone]  [☰]
+     Book Online lives in the dropdown menu + sticky CTA bar.
+     ───────────────────────────────────────────────────────────────────── */
   .header-inner {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 8px;
-    min-height: 60px;
+    gap: 0.5rem;
+    min-height: 58px;
+    padding: 0;
   }
 
-  .header-left  { gap: 0; flex-shrink: 0; }
-  .brand img    { width: 88px; }
+  .header-left {
+    gap: 0;
+    flex-shrink: 0;
+  }
 
-  /* Phone number hidden — "Call" in the sticky bar covers it */
-  .header-phone { display: none; }
+  .brand img { width: 82px; height: auto; }
 
-  /* Right side: compact Book Online + hamburger */
-  .header-right { gap: 8px; flex-shrink: 0; }
-
-  /* Show Book Online but compact */
-  .header-right .btn-primary {
-    display: inline-flex;
-    padding: 8px 14px;
-    font-size: 0.82rem;
-    min-height: 40px;
+  /* Phone: centered, readable, clickable */
+  .header-phone {
+    display: flex;
+    justify-content: center;
+    font-size: clamp(0.95rem, 4vw, 1.1rem);
+    font-weight: 800;
     white-space: nowrap;
+    color: var(--clr-ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
   }
 
-  /* Still hide Patient Info — it's in the dropdown */
-  .header-right .btn-gray { display: none; }
+  /* Right cell: only the hamburger toggle */
+  .header-right                { justify-content: flex-end; gap: 0; flex-shrink: 0; }
+  .header-right .btn-primary,
+  .header-right .btn-gray      { display: none; }
 
-  /* ── Dropdown: fixed to viewport so it always fits the screen ── */
+  /* ─────────────────────────────────────────────────────────────────────
+     DROPDOWN  —  position:fixed so it's always viewport-relative,
+     never clipped by its tiny 48px menu-wrapper parent.
+     ───────────────────────────────────────────────────────────────────── */
   .header-dropdown {
     position: fixed;
-    top: 60px;          /* sits just below the mobile header */
+    top: 58px;                      /* match header min-height */
     left: 12px;
     right: 12px;
     width: auto;
+    max-width: calc(100vw - 24px);
     margin: 0;
+    padding: 0.6rem;
     border-radius: 14px;
-    padding: 8px;
-    z-index: 200;       /* above everything */
-    max-height: calc(100vh - 80px);
+    z-index: 999;
+    max-height: calc(100dvh - 80px);
     overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
   }
 
   .header-dropdown a {
-    padding: 13px 16px;
+    display: block;
+    padding: 0.85rem 1rem;
     font-size: 1rem;
     border-radius: 10px;
+    white-space: normal;
   }
 
-  /* ── Trust marquee ── */
-  .trust-marquee { height: 40px; }
+  /* ─────────────────────────────────────────────────────────────────────
+     TRUST MARQUEE  —  contained, chips smaller
+     ───────────────────────────────────────────────────────────────────── */
+  .trust-marquee {
+    height: 40px;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  .trust-marquee__track { gap: 0.55rem; }
+
   .trust-marquee .text-chip {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.65rem;
+    font-size: 0.74rem;
+    padding: 0.28rem 0.6rem;
+    white-space: nowrap;
   }
 
-  /* ── Hero ── */
+  /* ─────────────────────────────────────────────────────────────────────
+     HERO  —  container handles 16px horizontal margins (root fix above).
+     Just control vertical spacing, font sizes, and column collapse.
+     ───────────────────────────────────────────────────────────────────── */
   .hero {
     min-height: auto;
     background-position: center center;
@@ -1536,138 +1575,143 @@ address {
   .hero-layout {
     display: flex;
     flex-direction: column;
-    padding: 2.5rem 0 2rem;
-    gap: 1.75rem;
+    padding: 2.25rem 0 2rem;
+    gap: 1.5rem;
   }
 
-  .hero-copy { gap: 1rem; }
+  .hero-copy { gap: 0.85rem; }
 
   .hero-copy h1 {
-    font-size: clamp(1.85rem, 8.5vw, 2.4rem);
-    line-height: 1.05;
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+    line-height: 1.06;
     letter-spacing: -0.03em;
+    max-width: 100%;
   }
 
   .hero .hero-subhead {
-    font-size: 1rem;
+    font-size: 0.97rem;
     line-height: 1.55;
     max-width: 100%;
   }
 
-  /* Hero buttons: stack vertically, full width */
+  /* Hero CTAs: stacked, full width, comfortable tap size */
   .hero-cta-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 0.65rem;
   }
 
   .hero-cta-row .btn {
     width: 100%;
     flex: none;
     min-height: 50px;
+    font-size: 1rem;
   }
 
-  /* Hero card: full width, good padding */
+  /* ── Plan Your Visit card ── */
   .hero-card {
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 1.25rem;
+    padding: 1.15rem;
     border-radius: 14px;
-    gap: 14px;
+    gap: 12px;
   }
 
-  .hero-card-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
+  .hero-card-title        { font-size: 1.15rem; }
+  .hero-card-actions      { grid-template-columns: 1fr; gap: 8px; }
 
-  /* ── Quick info bar: 2-col ── */
+  /* ─────────────────────────────────────────────────────────────────────
+     QUICK INFO BAR  —  2 columns
+     ───────────────────────────────────────────────────────────────────── */
   .quick-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    padding: 12px 0;
+    padding: 10px 0;
   }
+  .quick-grid div { padding: 9px 11px; }
 
-  .quick-grid div { padding: 10px 12px; }
+  /* ─────────────────────────────────────────────────────────────────────
+     SECTIONS
+     ───────────────────────────────────────────────────────────────────── */
+  .section         { padding: 2.25rem 0; }
+  .section-heading { margin-bottom: 1.1rem; }
+  .final-inner     { padding: 2.25rem 0; gap: 1rem; }
+  .emergency-inner { padding: 1.1rem 0; }
 
-  /* ── Sections ── */
-  .section          { padding: 2.5rem 0; }
-  .section-heading  { margin-bottom: 1.25rem; }
-  .final-inner      { padding: 2.5rem 0; gap: 1rem; }
-  .emergency-inner  { padding: 1.25rem 0; }
+  /* ─────────────────────────────────────────────────────────────────────
+     CTA ROWS  —  stack on mobile
+     ───────────────────────────────────────────────────────────────────── */
+  .cta-row      { flex-direction: column; align-items: stretch; gap: 9px; }
+  .cta-row .btn { width: 100%; min-height: 46px; }
 
-  /* ── CTA rows — stack vertically ── */
-  .cta-row         { flex-direction: column; align-items: stretch; gap: 10px; }
-  .cta-row .btn    { width: 100%; min-height: 46px; }
-
-  /* ── Page hero: text only, hide image ── */
-  .page-hero-grid  { padding: 1.75rem 0 2rem; gap: 1rem; }
-  .page-hero-copy  { padding-left: 14px; border-left-width: 3px; gap: 10px; }
+  /* ─────────────────────────────────────────────────────────────────────
+     PAGE HERO  —  text only, image hidden to prioritise content
+     ───────────────────────────────────────────────────────────────────── */
+  .page-hero-grid  { padding: 1.5rem 0 1.75rem; gap: 0.9rem; }
+  .page-hero-copy  { padding-left: 13px; border-left-width: 3px; gap: 9px; }
   .page-hero-media { display: none; }
 
-  /* ── All grids: single column ── */
+  /* ─────────────────────────────────────────────────────────────────────
+     GRIDS  —  single column by default
+     ───────────────────────────────────────────────────────────────────── */
   .card-grid, .review-grid, .steps-grid, .trust-grid,
   .content-grid, .detail-grid,
   .family-grid, .affordability-grid, .employer-grid, .location-grid {
     grid-template-columns: 1fr;
   }
 
-  /* ── Value + condition: 2 cols ── */
+  /* 2-col exceptions */
   .value-grid     { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .condition-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 
-  /* ── Cards: reduce min-height and tighten padding ── */
-  .service-card { min-height: auto; padding: 18px; }
-  .detail-card  { padding: 18px; }
-  .info-panel   { padding: 18px; }
-  .step-card    { padding: 18px; }
+  /* ── Cards ── */
+  .service-card { min-height: auto; padding: 16px; }
+  .detail-card  { padding: 16px; }
+  .info-panel   { padding: 16px; }
+  .step-card    { padding: 16px; }
 
-  /* ── Family image: full width ── */
+  /* ── Family section image ── */
   .family-grid figure { width: 100%; justify-self: stretch; }
 
   /* ── Footer ── */
-  .footer-grid  { padding: 2rem 0 1.25rem; gap: 1.5rem; }
-  .footer-legal { flex-direction: column; gap: 6px; font-size: 0.75rem; }
+  .footer-grid  { padding: 1.75rem 0 1rem; gap: 1.25rem; }
+  .footer-legal { flex-direction: column; gap: 5px; font-size: 0.73rem; }
 
-  /* ── Mobile sticky CTA ── */
-  body                  { padding-bottom: 68px; }
-  .mobile-sticky-cta    { height: 64px; }
-  .mobile-sticky-cta a  { font-size: 0.88rem; font-weight: 800; min-height: 64px; }
+  /* ─────────────────────────────────────────────────────────────────────
+     STICKY BOTTOM CTA  —  compact but accessible
+     ───────────────────────────────────────────────────────────────────── */
+  body                 { padding-bottom: 64px; }
+  .mobile-sticky-cta   { height: 60px; }
+  .mobile-sticky-cta a { font-size: 0.85rem; font-weight: 800; min-height: 60px; }
 }
 
-/* ── Very small phones — max 390px ──────────────────────────────────── */
-@media (max-width: 390px) {
-  .brand img                   { width: 74px; }
-  .header-inner                { gap: 6px; }
-  .menu-toggle                 { width: 40px; height: 40px; }
-  .header-right .btn-primary   { padding: 7px 10px; font-size: 0.78rem; }
+/* ── Very small phones — 360px and under ────────────────────────────── */
+@media (max-width: 360px) {
+  .brand img      { width: 72px; }
+  .header-phone   { font-size: 0.88rem; }
+  .header-inner   { gap: 4px; }
+  .menu-toggle    { width: 40px; height: 40px; }
 
   .hero-layout    { padding: 1.75rem 0 1.5rem; gap: 1.25rem; }
-  .hero-copy h1   { font-size: clamp(1.55rem, 7.5vw, 1.85rem); }
+  .hero-copy h1   { font-size: clamp(1.5rem, 7.5vw, 1.75rem); }
 }
 
-/* ── Small tablet — 560px to 767px ──────────────────────────────────── */
+/* ── Phablet — 560px to 767px ───────────────────────────────────────── */
 @media (min-width: 560px) and (max-width: 767px) {
-  /* 2-col cards on tablet-width phones */
   .card-grid, .review-grid, .steps-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .condition-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .section { padding: 3rem 0; }
+  .condition-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .section        { padding: 2.75rem 0; }
 }
 
 /* ── Tablet & desktop — 768px+ ───────────────────────────────────────── */
 @media (min-width: 768px) {
   body { padding-bottom: 0; }
 
+  /* Hero */
   .hero { min-height: 84vh; }
-
   .hero-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 340px;
@@ -1675,41 +1719,50 @@ address {
     align-items: center;
     padding: 60px 0 68px;
   }
+  .hero-cta-row           { flex-direction: row; align-items: center; }
+  .hero-cta-row .btn      { width: auto; flex: 0 0 auto; }
+  .cta-row                { flex-direction: row; align-items: center; }
+  .cta-row .btn           { width: auto; }
 
-  /* Restore page hero image */
+  /* Page hero */
   .page-hero-media { display: block; }
+  .page-hero-grid  { grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr); }
 
-  .page-hero-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
-  }
-
-  .family-grid,
-  .affordability-grid,
-  .employer-grid,
-  .location-grid {
+  /* Two-col sections */
+  .family-grid, .affordability-grid, .employer-grid, .location-grid {
     grid-template-columns: minmax(0, 1fr) minmax(300px, 0.86fr);
   }
 
-  .content-grid  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .detail-grid   { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-  .quick-grid    { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  .value-grid    { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  /* Grids */
+  .content-grid   { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-grid    { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .quick-grid     { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .value-grid     { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .condition-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-
   .card-grid, .review-grid, .steps-grid, .trust-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  /* Section spacing */
   .section { padding: 80px 0; }
   .section-heading.split { grid-template-columns: minmax(0, 1fr) auto; }
 
-  /* Restore header-right buttons */
+  /* Header: restore all elements */
   .header-right .btn-gray,
   .header-right .btn-primary { display: inline-flex; }
+  .header-phone              { display: block; font-size: 0.92rem; }
+  .header-inner              { display: flex; min-height: 70px; }
 
-  /* Restore phone number style */
-  .header-phone { font-size: 0.92rem; }
+  /* Dropdown: back to absolute positioning on desktop */
+  .header-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: auto;
+    right: 0;
+    width: auto;
+    max-width: none;
+    max-height: none;
+  }
 
   .mobile-sticky-cta { display: none; }
 
@@ -1717,34 +1770,23 @@ address {
     grid-template-columns: 1.4fr 1fr 1fr 1fr;
     padding-bottom: 36px;
   }
-
-  /* Hero CTA row: side-by-side again */
-  .hero-cta-row { flex-direction: row; align-items: center; }
-  .hero-cta-row .btn { width: auto; flex: 0 0 auto; }
-
-  /* Section CTA rows: side-by-side */
-  .cta-row { flex-direction: row; align-items: center; }
-  .cta-row .btn { width: auto; }
 }
 
 /* ── Wide desktop — 1040px+ ──────────────────────────────────────────── */
 @media (min-width: 1040px) {
   .hero { min-height: 88vh; }
-
   .hero-layout {
     grid-template-columns: minmax(0, 1fr) 380px;
     padding: 72px 0 80px;
   }
-
   .page-hero-grid {
     min-height: 420px;
     padding: 56px 0;
   }
-
-  .header-inner   { min-height: 80px; }
-  .brand img      { width: 140px; }
-  .header-phone   { font-size: 1.08rem; }
-  .header-right   { gap: 10px; }
+  .header-inner  { min-height: 80px; }
+  .brand img     { width: 140px; }
+  .header-phone  { font-size: 1.08rem; }
+  .header-right  { gap: 10px; }
 }
 
 /* ── Reduced Motion ──────────────────────────────────────────────────── */
