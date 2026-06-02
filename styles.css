@@ -406,6 +406,19 @@ textarea:focus-visible,
   color: var(--clr-red);
 }
 
+/* Gray — for secondary header actions like Patient Info */
+.btn-gray {
+  background: var(--clr-soft-gray);
+  color: var(--clr-ink);
+  border-color: var(--clr-border);
+}
+
+.btn-gray:hover {
+  background: #e0e0de;
+  border-color: #c4c4c0;
+  color: var(--clr-ink);
+}
+
 /* Size & width helpers */
 .btn-lg {
   min-height: 52px;
