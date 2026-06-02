@@ -43,9 +43,23 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+}
+
+img,
+video,
+iframe,
+svg {
+  max-width: 100%;
+  height: auto;
 }
 
 body {
@@ -1443,115 +1457,226 @@ address {
 
 /* ══════════════════════════════════════════════════════════════════════
    RESPONSIVE SYSTEM
-   mobile-first: base = mobile, then layer up with min-width
+   Breakpoints: 430 · 560 · 768 · 1040
    ══════════════════════════════════════════════════════════════════════ */
 
-/* ── Mobile only — max 559px ─────────────────────────────────────────── */
-@media (max-width: 559px) {
+/* ── All mobile / tablet — max 767px ────────────────────────────────── */
+@media (max-width: 767px) {
 
-  /* Typography */
-  h1 { font-size: clamp(1.6rem, 7.5vw, 2rem); line-height: 1.08; }
-  h2 { font-size: clamp(1.3rem, 6vw, 1.6rem); }
-  h3 { font-size: 1.05rem; }
+  /* ── Typography ── */
+  h1 { font-size: clamp(1.7rem, 8vw, 2.2rem); line-height: 1.06; letter-spacing: -0.03em; }
+  h2 { font-size: clamp(1.3rem, 6vw, 1.7rem); line-height: 1.1; }
+  h3 { font-size: 1.05rem; line-height: 1.2; }
+  p, li { font-size: 1rem; line-height: 1.55; }
 
-  /* ── Header: strip to logo + Book Online + hamburger ── */
-  .header-inner   { min-height: 62px; gap: 8px; }
-  .brand img      { width: 92px; }
-  .header-phone   { display: none; }        /* shown in mobile sticky CTA */
-  .header-right   { gap: 8px; }
-  .header-right .btn-gray { display: none; } /* Patient Info lives in the dropdown */
-  .btn            { min-height: 40px; padding: 9px 14px; font-size: 0.88rem; }
+  /* ── Header — 3-zone grid: logo | phone | menu ── */
+  .header-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px;
+    min-height: 60px;
+  }
+
+  .header-left { gap: 0; }               /* logo only in left cell */
+  .brand img   { width: 88px; }
+
+  /* Phone number sits in the middle cell */
+  .header-phone {
+    display: flex;
+    justify-content: center;
+    font-size: clamp(0.9rem, 3.8vw, 1.05rem);
+    font-weight: 800;
+    white-space: nowrap;
+    color: var(--clr-ink);
+    text-decoration: none;
+  }
+
+  /* Right cell: menu toggle only — hide Patient Info + Book Online */
+  .header-right               { gap: 0; justify-content: flex-end; }
+  .header-right .btn-gray,
+  .header-right .btn-primary  { display: none; }
+
+  /* Dropdown opens full-width on mobile */
+  .header-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    margin: 0 12px;
+    width: auto;
+    border-radius: 14px;
+    padding: 8px;
+  }
+
+  .header-dropdown a {
+    padding: 13px 16px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
 
   /* ── Trust marquee ── */
-  .trust-marquee  { height: 40px; }
+  .trust-marquee { height: 40px; }
+  .trust-marquee .text-chip {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.65rem;
+  }
 
   /* ── Hero ── */
-  .hero           { min-height: 72vh; background-position: center; }
-  .hero-layout    { padding: 32px 0 28px; gap: 20px; }
-  .hero-copy      { gap: 14px; }
-  .hero-card      { padding: 18px 16px; gap: 14px; }
+  .hero {
+    min-height: auto;
+    background-position: center center;
+  }
 
-  /* ── Quick info bar: 2 columns ── */
+  .hero-layout {
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 0 2rem;
+    gap: 1.75rem;
+  }
+
+  .hero-copy { gap: 1rem; }
+
+  .hero-copy h1 {
+    font-size: clamp(1.85rem, 8.5vw, 2.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .hero .hero-subhead {
+    font-size: 1rem;
+    line-height: 1.55;
+    max-width: 100%;
+  }
+
+  /* Hero buttons: stack vertically, full width */
+  .hero-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .hero-cta-row .btn {
+    width: 100%;
+    flex: none;
+    min-height: 50px;
+  }
+
+  /* Hero card: full width, good padding */
+  .hero-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 1.25rem;
+    border-radius: 14px;
+    gap: 14px;
+  }
+
+  .hero-card-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  /* ── Quick info bar: 2-col ── */
   .quick-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     padding: 12px 0;
   }
+
   .quick-grid div { padding: 10px 12px; }
 
   /* ── Sections ── */
-  .section        { padding: 36px 0; }
-  .section-heading { margin-bottom: 20px; }
-  .final-inner    { padding: 36px 0; gap: 16px; }
-  .emergency-inner { padding: 18px 0; }
+  .section          { padding: 2.5rem 0; }
+  .section-heading  { margin-bottom: 1.25rem; }
+  .final-inner      { padding: 2.5rem 0; gap: 1rem; }
+  .emergency-inner  { padding: 1.25rem 0; }
 
-  /* ── CTA rows ── */
-  .cta-row         { flex-direction: column; align-items: stretch; }
-  .cta-row .btn    { width: 100%; }
-  /* Hero CTAs stay side-by-side */
-  .hero-cta-row              { flex-direction: row; flex-wrap: wrap; }
-  .hero-cta-row .btn         { width: auto; flex: 1 1 120px; }
+  /* ── CTA rows — stack vertically ── */
+  .cta-row         { flex-direction: column; align-items: stretch; gap: 10px; }
+  .cta-row .btn    { width: 100%; min-height: 46px; }
 
-  /* ── Page hero: content only, hide image to prioritise text ── */
-  .page-hero-grid  { padding: 22px 0 26px; gap: 16px; }
-  .page-hero-copy  { padding-left: 14px; border-left-width: 3px; gap: 12px; }
+  /* ── Page hero: text only, hide image ── */
+  .page-hero-grid  { padding: 1.75rem 0 2rem; gap: 1rem; }
+  .page-hero-copy  { padding-left: 14px; border-left-width: 3px; gap: 10px; }
   .page-hero-media { display: none; }
 
-  /* ── Grids ── */
-  .value-grid      { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .condition-grid  { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  .service-card    { min-height: auto; }
+  /* ── All grids: single column ── */
+  .card-grid, .review-grid, .steps-grid, .trust-grid,
+  .content-grid, .detail-grid,
+  .family-grid, .affordability-grid, .employer-grid, .location-grid {
+    grid-template-columns: 1fr;
+  }
 
-  /* ── Family / two-col sections: stack ── */
+  /* ── Value + condition: 2 cols ── */
+  .value-grid     { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .condition-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+
+  /* ── Cards: reduce min-height and tighten padding ── */
+  .service-card { min-height: auto; padding: 18px; }
+  .detail-card  { padding: 18px; }
+  .info-panel   { padding: 18px; }
+  .step-card    { padding: 18px; }
+
+  /* ── Family image: full width ── */
   .family-grid figure { width: 100%; justify-self: stretch; }
 
   /* ── Footer ── */
-  .footer-grid    { gap: 20px; padding: 28px 0 16px; }
-  .footer-legal   { flex-direction: column; gap: 6px; font-size: 0.75rem; }
+  .footer-grid  { padding: 2rem 0 1.25rem; gap: 1.5rem; }
+  .footer-legal { flex-direction: column; gap: 6px; font-size: 0.75rem; }
+
+  /* ── Mobile sticky CTA ── */
+  body                  { padding-bottom: 68px; }
+  .mobile-sticky-cta    { height: 64px; }
+  .mobile-sticky-cta a  { font-size: 0.88rem; font-weight: 800; min-height: 64px; }
 }
 
-/* ── Small tablet — 560px to 759px ──────────────────────────────────── */
-@media (min-width: 560px) {
-  .quick-grid,
-  .value-grid {
+/* ── Very small phones — max 430px ──────────────────────────────────── */
+@media (max-width: 430px) {
+  .brand img      { width: 76px; }
+  .header-phone   { font-size: clamp(0.82rem, 3.5vw, 0.96rem); }
+  .header-inner   { gap: 6px; }
+  .menu-toggle    { width: 42px; height: 42px; }
+
+  .hero-layout    { padding: 2rem 0 1.5rem; gap: 1.5rem; }
+  .hero-copy h1   { font-size: clamp(1.65rem, 8vw, 2rem); }
+}
+
+/* ── Small tablet — 560px to 767px ──────────────────────────────────── */
+@media (min-width: 560px) and (max-width: 767px) {
+  /* 2-col cards on tablet-width phones */
+  .card-grid, .review-grid, .steps-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  /* 3 cols feels better on mid-width than 4 */
   .condition-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  /* 2-col cards between mobile and full desktop */
-  .card-grid,
-  .review-grid,
-  .steps-grid,
-  .trust-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  /* Show phone number alongside logo on larger phones */
-  .header-phone { display: block; font-size: 0.9rem; }
+  .section { padding: 3rem 0; }
 }
 
-/* ── Tablet & desktop — 760px+ ───────────────────────────────────────── */
-@media (min-width: 760px) {
+/* ── Tablet & desktop — 768px+ ───────────────────────────────────────── */
+@media (min-width: 768px) {
   body { padding-bottom: 0; }
 
   .hero { min-height: 84vh; }
 
   .hero-layout {
+    display: grid;
     grid-template-columns: minmax(0, 1fr) 340px;
     gap: 48px;
     align-items: center;
+    padding: 60px 0 68px;
   }
+
+  /* Restore page hero image */
+  .page-hero-media { display: block; }
 
   .page-hero-grid {
     grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
   }
-
-  /* Show page hero image again */
-  .page-hero-media { display: block; }
 
   .family-grid,
   .affordability-grid,
@@ -1560,38 +1685,26 @@ address {
     grid-template-columns: minmax(0, 1fr) minmax(300px, 0.86fr);
   }
 
-  .content-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  .content-grid  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-grid   { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-  .detail-grid {
+  .quick-grid    { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .value-grid    { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .condition-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  .card-grid, .review-grid, .steps-grid, .trust-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .section { padding: 80px 0; }
+  .section-heading.split { grid-template-columns: minmax(0, 1fr) auto; }
 
-  .quick-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
+  /* Restore header-right buttons */
+  .header-right .btn-gray,
+  .header-right .btn-primary { display: inline-flex; }
 
-  .card-grid,
-  .review-grid,
-  .steps-grid,
-  .trust-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .value-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .condition-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .section-heading.split {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
+  /* Restore phone number style */
+  .header-phone { font-size: 0.92rem; }
 
   .mobile-sticky-cta { display: none; }
 
@@ -1599,6 +1712,14 @@ address {
     grid-template-columns: 1.4fr 1fr 1fr 1fr;
     padding-bottom: 36px;
   }
+
+  /* Hero CTA row: side-by-side again */
+  .hero-cta-row { flex-direction: row; align-items: center; }
+  .hero-cta-row .btn { width: auto; flex: 0 0 auto; }
+
+  /* Section CTA rows: side-by-side */
+  .cta-row { flex-direction: row; align-items: center; }
+  .cta-row .btn { width: auto; }
 }
 
 /* ── Wide desktop — 1040px+ ──────────────────────────────────────────── */
@@ -1615,8 +1736,10 @@ address {
     padding: 56px 0;
   }
 
-  /* Full phone number size restored on desktop */
-  .header-phone { font-size: 1.08rem; }
+  .header-inner   { min-height: 80px; }
+  .brand img      { width: 140px; }
+  .header-phone   { font-size: 1.08rem; }
+  .header-right   { gap: 10px; }
 }
 
 /* ── Reduced Motion ──────────────────────────────────────────────────── */
